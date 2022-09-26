@@ -1,0 +1,50 @@
+<h2>Meadownlark Travel Newsletter</h2>
+<div id="newsletterSignupFormContainer">
+    <form class="form-horizontal" role="form" id="newsletterSignupForm">
+        <input type="hidden" name="_csrf" value="{{csrf}}">
+        <div class="form-group">
+            <label for="fieldName" class="col.sm-2 control-label">Nome</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="fieldName" name="name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="fieldEmail" class="col-sm-2 control-label">E-mail</label>
+            <div class="col-sm-4">
+                <input type="email" class="form-control" required id="fieldEmail" name="email">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    document.getElementById('newsletterSignupForm')
+    .addEventListener('submit', evt => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            _csrf: form.elements._csrf.value,
+            name: form.elements.name.value,
+            email: form.elements.email.value,
+        })
+        const headers = { 'Content-Type': 'application/json' }
+        const container =
+            document.getElementById('newsletterSignupFormContainer')
+        fetch('/api/newsletter-signup', { method: 'post', body, headers })
+        .then(resp => {
+            if(resp.status < 200 || resp.status >= 300)
+                throw new Error(`Falha na requisição com status ${resp.status}`)
+                return resp.json()
+        })
+        .then(json => {
+            container.innerHTML = '<span class="alert alert-success"><strong>Obrigado por assinar!</strong></span>'
+        })
+        .catch(err => {
+            container.innerHTML = `<span class="alert alert-danger"><strong>Desculpa, tivemos um problema ao assinar. Por favor <a href="/newsletter">tente novamente.</a></strong></span>`
+        })
+    })
+</script>
