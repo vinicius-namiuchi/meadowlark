@@ -2,6 +2,7 @@ const handlers = require('./lib/handlers')
 const express = require('express')
 const expressHandlebars = require('express-handlebars')
 const weatherMiddlware = require('./lib/middleware/weather')
+const bodyParser = require('body-parser')
 
 const app = express()
 
@@ -23,10 +24,16 @@ const port = process.env.PORT|| 3000
 
 app.use(express.static(__dirname + '/public'))
 
+app.use(bodyParser.urlencoded({ extended: true }))
+
 app.use(weatherMiddlware)
 
 app.get('/', handlers.home)
 app.get('/section-test', handlers.sectionTest)
+
+app.get('/newsletter-signup', handlers.newsletterSignup)
+app.post('/newsletter-signup/process', handlers.newsletterSignupProcess)
+app.get('/newsletter-signup/thank-you', handlers.newsletterSignupThankYou)
 
 app.get('/sobre', handlers.sobre)
 
