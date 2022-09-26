@@ -43,14 +43,24 @@ app.get('/newsletter-signup/thank-you', handlers.newsletterSignupThankYou)
 
 app.get('/sobre', handlers.sobre)
 
+app.get('/contest/vacation-photo', handlers.vacationPhotoContest)
+app.get('/contest/vacation-photo-ajax', handlers.vacationPhotoContestAjax)
 app.post('/contest/vacation-photo/:year/:month', (req, res) => {
-    const form = new multiparty.Form()
-    form.parse(req, (err, fields, files) => {
-        if(err) return handlers.vacationPhotoContestProcessError(req, res, err.message)
-        console.log('got fields: ', fields)
-        console.log('and files: ', files)
-        handlers.vacationPhotoContestProcess(req, res, fields, files)
-    })
+  const form = new multiparty.Form()
+  form.parse(req, (err, fields, files) => {
+    if(err) return handlers.vacationPhotoContestProcessError(req, res, err.message)
+    console.log('got fields: ', fields)
+    console.log('and files: ', files)
+    handlers.vacationPhotoContestProcess(req, res, fields, files)
+  })
+})
+app.get('/contest/vacation-photo-thank-you', handlers.vacationPhotoContestProcessThankYou)
+app.post('/api/vacation-photo-contest/:year/:month', (req, res) => {
+  const form = new multiparty.Form()
+  form.parse(req, (err, fields, files) => {
+    if(err) return handlers.api.vacationPhotoContestError(req, res, err.message)
+    handlers.api.vacationPhotoContest(req, res, fields, files)
+  })
 })
 
 // página 404 personalizada
