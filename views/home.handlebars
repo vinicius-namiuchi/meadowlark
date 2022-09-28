@@ -2,13 +2,22 @@
 
 <p>Por favor assine nossa newsletter:</p>
 <ul>
-  <li><a href="/newsletter">Newsletter</a>.</li>
+  <li><a href="/newsletter-signup">Newsletter</a>.</li>
 </ul>
-
-<p>Acesse o concurso de foto das férias</p>
-<ul>
-  <li><a href="/contest/vacation-photo">Concurso Fotos das Férias</a>.</li>
-</ul>
-
-<a href="/newsletter">Newsletter</a>
+<p>Para simular um check-out bem-sucedido do carrinho, preencha o seguinte formulário:</p>
+<form class="form" action="/cart/checkout" method="post">
+    <div class="form-group">
+      <label>Nome:
+        <input name="name" class="form-control" />
+      </label>
+    </div>
+    <div class="form-group">
+      <label>E-mail:
+        <input type="email" name="email" class="form-control" />
+      </label>
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Simular compra</button></div>
+    </div>
+</form>
 {{> weather}}
