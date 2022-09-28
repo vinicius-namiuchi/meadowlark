@@ -12,6 +12,7 @@ const credentials = require('./credentials')
 const handlers = require('./lib/handlers')
 const weatherMiddlware = require('./lib/middleware/weather')
 const flashMiddleware = require('./lib/middleware/flash')
+const cluster = require('cluster')
 
 const app = express()
 
@@ -35,15 +36,7 @@ app.set('view engine', 'handlebars')
 
 app.use(express.static(__dirname + '/public'))
 
-switch(app.get('env')) {
-    case 'development':
-        app.use(morgan('dev'))
-        break
-    case 'production':
-        const stream = fs.createWriteStream(__dirname + '/access.log', { flags: 'a' })
-        app.use(morgan('combined', { stream }))
-        break
-}
+
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -65,6 +58,12 @@ const mailTransport = nodemailer.createTransport({
 
 app.use(weatherMiddlware)
 app.use(flashMiddleware)
+
+app.use((req, res, next) => {
+    if(cluster.isWorker)
+    console.log(`Worker ${cluster.worker.id} recebendo requisições`)
+    next()
+})
 
 app.get('/', handlers.home)
 
@@ -126,12 +125,17 @@ app.use(handlers.notFound)
 // página 500 personalizada
 app.use(handlers.serverError)
 
-const port = process.env.PORT|| 3000
+function startServer(port) {
+    app.listen(port, function() {
+        console.log(`Express iniciado em modo ${app.get('env')} em http://localhost:${port}. Pressione as teclas CTRL + C para finalizar.`)
+    })
+}
 
 if(require.main === module) {
-    app.listen(port, () => {
-        console.log(`Express iniciado em modo ${app.get('env')} no endereço http://localhost:${port}. Pressione CTRL + C para finalizar.`)
-    })
+    // a aplicação é executada diretamente. Inicia o servidor do aplicativo
+    startServer(process.env.PORT || 3000)
 } else {
-    module.exports = app
+    // a aplicaçãoé importada como um módulo com "require":
+    // exporta a função que cria o servidor
+    module.exports = startServer
 }
