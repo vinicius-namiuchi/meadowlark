@@ -1,6 +1,7 @@
 const express = require('express')
 const expressHandlebars = require('express-handlebars')
 const bodyParser = require('body-parser')
+const multiparty = require('multiparty')
 const cookieParser = require('cookie-parser')
 const expressSession = require('express-session')
 const nodemailer = require('nodemailer')
@@ -71,6 +72,26 @@ app.get('/newsletter-signup', handlers.newsletterSignup)
 app.post('/newsletter-signup/process', handlers.newsletterSignupProcess)
 app.get('/newsletter-signup/thank-you', handlers.newsletterSignupThankYou)
 app.get('/newsletter-archive', handlers.newsletterSignupThankYou)
+
+// vacation photo contest
+app.get('/contest/vacation-photo', handlers.vacationPhotoContest)
+app.get('/contest/vacation-photo-ajax', handlers.vacationPhotoContestAjax)
+app.post('/contest/vacation-photo/:year/:month', (req, res) => {
+    const form = new multiparty.Form()
+    form.parse(req, (err, fields, files) => {
+        if(err) return handlers.vacationPhotoContestProcessError(req, res, err.message)
+        console.log('got fields: ', fields)
+        console.log('and files: ', files)
+        handlers.vacationPhotoContestProcess(req, res, fields, files)
+    })
+})
+app.post('/api/vacation-photo-contest/:year/:month', (req, res) => {
+    const form = new multiparty.Form()
+    form.parse(req, (err, fields, files) => {
+        if(err) return handlers.api.vacationPhotoContestError(req, res, err.message)
+        handlers.api.vacationPhotoContest(req, res, fields, files)
+    })
+})
 
 app.post('/cart/checkout', (req, res, next) => {
     const cart = req.session.cart
