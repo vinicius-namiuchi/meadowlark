@@ -4,6 +4,7 @@ node_modules
 .DS_Store
 .credentials.*
 access.log
+credentials.js
 
 # coloque aqui qualquer outro arquivo que não queira
 # inserir no repositório, como .DS_Store (OSX), *.bak, etc.
