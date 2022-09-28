@@ -9,6 +9,7 @@ const htmlToFormattedText = require('html-to-formatted-text')
 const morgan = require('morgan')
 const fs = require('fs')
 
+require('./db')
 const credentials = require('./credentials')
 const handlers = require('./lib/handlers')
 const weatherMiddlware = require('./lib/middleware/weather')
