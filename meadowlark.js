@@ -6,15 +6,15 @@ const cookieParser = require('cookie-parser')
 const expressSession = require('express-session')
 const nodemailer = require('nodemailer')
 const htmlToFormattedText = require('html-to-formatted-text')
-const morgan = require('morgan')
 const fs = require('fs')
 
-require('./db')
 const credentials = require('./credentials')
 const handlers = require('./lib/handlers')
 const weatherMiddlware = require('./lib/middleware/weather')
 const flashMiddleware = require('./lib/middleware/flash')
 const cluster = require('cluster')
+
+require('./db')
 
 const app = express()
 
@@ -68,6 +68,10 @@ app.use((req, res, next) => {
 })
 
 app.get('/', handlers.home)
+
+app.get('/vacations', handlers.listVacations)
+app.get('/notify-me-when-in-season', handlers.notifyWhenInSeasonForm)
+app.post('/notify-me-when-in-season', handlers.notifyWhenInSeasonProcess)
 
 app.get('/newsletter-signup', handlers.newsletterSignup)
 app.post('/newsletter-signup/process', handlers.newsletterSignupProcess)
@@ -139,7 +143,7 @@ app.get('*', (req, res) => {
       ],
     }
     res.render('home')
-  })
+})
 
 // página 404 personalizada
 app.use(handlers.notFound)

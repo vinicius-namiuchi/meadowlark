@@ -24,4 +24,4 @@ const vacationSchema = mongoose.Schema({
 })
 
 const Vacation = mongoose.model('Vacation', vacationSchema)
-module.exports = vacation
+module.exports = Vacation

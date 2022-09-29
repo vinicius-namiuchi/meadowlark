@@ -1,0 +1,17 @@
+<h1>Férias</h1>
+{{#each vacations}}
+    <div class="vacation">
+        <h3>{{name}}</h3>
+        <p>{{description}}</p>
+        {{#if inSeason}}
+            <span class="price">{{price}}</span>
+            <a href="/cart/add?sku={{sku}}" class="btn btn-primary">Compre agora!</a>
+        {{else}}
+            <span class="outOfSeason">Sentimos muito, mas esse pacote está indisponível.</span>
+                {{! A "notifique-me quando esse pacote estiver disponível" página estará em nossa proxima tarefa. }}
+                <a href="/notify-me-when-in-season?sku={{sku}}">Notifique-me quando este pacote estiver disponível.</a>
+        {{/if}}
+    </div>
+    <hr>
+{{/each}}
+<a href="/home">Voltar</a>
